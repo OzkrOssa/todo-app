@@ -19,7 +19,7 @@ const TodoList: React.FC<TodoListProps> = ({ updateList }) => {
   const [updatedTitle, setUpdatedTitle] = useState('');
   const [updatedDescription, setUpdatedDescription] = useState('');
   const [updatedExpectedDate, setUpdatedExpectedDate] = useState('');
-  const [updatedStatus, setUpdatedStatus] = useState(TaskStatus.PENDING); // Inicializa con un valor del enum
+  const [updatedStatus, setUpdatedStatus] = useState(TaskStatus.PENDING);
 
   const fetchTasks = async () => {
     try {
@@ -52,7 +52,7 @@ const TodoList: React.FC<TodoListProps> = ({ updateList }) => {
     setUpdatedTitle(task.title);
     setUpdatedDescription(task.description);
     setUpdatedExpectedDate(task.expected_date);
-    setUpdatedStatus(task.status as TaskStatus); // Asumiendo que `status` es del tipo TaskStatus
+    setUpdatedStatus(task.status as TaskStatus);
   };
 
   const handleUpdate = async (e: React.FormEvent) => {
@@ -63,12 +63,12 @@ const TodoList: React.FC<TodoListProps> = ({ updateList }) => {
         title: updatedTitle, 
         description: updatedDescription,
         expected_date: updatedExpectedDate,
-        status: updatedStatus // Utiliza el enum para el status
+        status: updatedStatus
       };
       try {
         await TaskService.updateTask(editingTask.id, updatedTask);
-        setEditingTask(null); // Limpia el estado de edición
-        fetchTasks(); // Refresca la lista de tareas
+        setEditingTask(null);
+        fetchTasks();
       } catch (err) {
         console.log(err)
         setError('Error updating task');
