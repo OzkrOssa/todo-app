@@ -22,6 +22,11 @@ export class UserService {
     return user;
   }
 
+  async findOne(username: string): Promise<TypeOrmUser | null> {
+    const user = await this.userPort.findOne(username);
+    return user;
+  }
+
   private async hashPassword(password: string): Promise<string> {
     return await bcrypt.hash(password, 10);
   }
