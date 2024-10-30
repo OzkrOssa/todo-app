@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Task } from './task.entity';
 
 @Entity()
 export class TypeOrmUser {
@@ -17,6 +18,9 @@ export class TypeOrmUser {
 
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
+
+  @OneToMany(() => Task, (task) => task.user)
+  tasks: Task[];
 
   async validatePassword(password: string): Promise<boolean> {
     return await bcrypt.compare(password, this.passwordHash);
