@@ -13,7 +13,7 @@ export default function Page() {
   }
 
   const handleTaskAdded = () => {
-    setUpdateList((prev) => !prev); // Cambia el estado para forzar la actualización de la lista
+    setUpdateList((prev) => !prev);
   };
 
   return (
