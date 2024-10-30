@@ -8,11 +8,11 @@ import { TaskModule } from './adapter/task.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'todouser',
-      password: 'todopass',
-      database: 'todos',
+      host: 'todo-db',
+      port: +process.env.DB_PORT || 3306,
+      username: process.env.DB_USERNAME || 'defaultUser',
+      password: process.env.DB_PASSWORD || 'defaultPass',
+      database: process.env.DB_DATABASE || 'defaultDB',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
