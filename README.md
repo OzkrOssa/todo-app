@@ -22,9 +22,7 @@ El proyecto utiliza **Docker** y **Docker Compose** para simplificar la configur
 
 3. **Estructura del Proyecto**
 
-   Asegúrate de que la estructura de tu proyecto esté organizada como sigue:
-
-   ```
+```
    ├───todo-back
 │   └───src
 │       ├───adapter
@@ -45,10 +43,9 @@ El proyecto utiliza **Docker** y **Docker Compose** para simplificar la configur
             ├───register
             ├───services
             └───todos
+```
 
-   ```
-
-## Pasos para Instalar Dependencias
+## Requisitos Previos
 
 1. **Navega a la Carpeta del Backend**
 
@@ -112,6 +109,4 @@ El frontend se construye utilizando **Next.js**, que permite la renderización d
 
 ## Problemas Encontrados
 
-Durante el desarrollo, enfrenté algunos desafíos, incluido el hecho de que estuve un poco enfermo todo el día. Sin embargo, me esforzaré por enviar una prueba lo más completa posible, tambien estuve un tiempo considerable sin usar estas tecnologias ya que estaba enfocado en golang y python entonces tuve que buscar documentacion para realzar algunas cosas que no recordaba. 
-
-Agradezco tu comprensión y paciencia mientras finalizo este proyecto.
+Durante el desarrollo, enfrenté algunos desafíos, incluido el hecho de que estuve un poco enfermo todo el día. Sin embargo, me esforzaré por enviar una prueba lo más completa posible, tambien estuve un tiempo considerable sin usar estas tecnologias ya que estaba enfocado en golang y python entonces tuve que buscar documentacion para realzar algunas cosas que no recordaba.
