@@ -7,8 +7,11 @@ import {
   Param,
   Put,
   Delete,
+  UnauthorizedException,
+  Headers,
 } from '@nestjs/common';
 import { TaskService } from '../../core/service/task.service';
+import { JwtService } from '@nestjs/jwt';
 
 export enum TaskStatus {
   PENDING = 'pending',
@@ -18,9 +21,11 @@ export enum TaskStatus {
 
 @Controller('tasks')
 export class TaskController {
-  constructor(private readonly taskService: TaskService) {}
+  constructor(
+    private readonly taskService: TaskService,
+    private readonly jwtService: JwtService,
+  ) {}
 
-  // Crear una nueva tarea
   @Post()
   async create(
     @Body()
@@ -30,11 +35,20 @@ export class TaskController {
       status: TaskStatus;
       expected_date: string;
     },
+    @Headers('authorization') authorization: string,
   ) {
     const expectedDate = taskDTO.expected_date
       ? new Date(taskDTO.expected_date)
       : null;
-    const userID = 'e4b8c165-81cc-4df4-aa22-20fe94ab57e9';
+    if (!authorization) {
+      throw new UnauthorizedException('You must be logged ');
+    }
+
+    const token = authorization.split(' ')[1];
+    const decoded = this.jwtService.verify(token, {
+      secret: 'todoapp',
+    });
+
     await this.taskService.create(
       {
         title: taskDTO.title,
@@ -42,7 +56,7 @@ export class TaskController {
         status: taskDTO.status,
         expectedDate,
       },
-      userID,
+      decoded.id,
     );
 
     return {
@@ -51,15 +65,32 @@ export class TaskController {
   }
 
   @Get()
-  async findAll() {
-    const userID = 'e4b8c165-81cc-4df4-aa22-20fe94ab57e9';
-    return await this.taskService.getAll(userID);
+  async findAll(@Headers('authorization') authorization: string) {
+    if (!authorization) {
+      throw new UnauthorizedException('You must be logged ');
+    }
+    const token = authorization.split(' ')[1];
+    const decoded = this.jwtService.verify(token, {
+      secret: 'todoapp',
+    });
+
+    return await this.taskService.getAll(decoded.id);
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    const userID = 'e4b8c165-81cc-4df4-aa22-20fe94ab57e9';
-    const task = await this.taskService.getByID(id, userID);
+  async findOne(
+    @Param('id') id: string,
+    @Headers('authorization') authorization: string,
+  ) {
+    if (!authorization) {
+      throw new UnauthorizedException('You must be logged ');
+    }
+
+    const token = authorization.split(' ')[1];
+    const decoded = this.jwtService.verify(token, {
+      secret: 'todoapp',
+    });
+    const task = await this.taskService.getByID(id, decoded.id);
     if (!task) {
       throw new NotFoundException(`Task with id ${id} not found`);
     }
@@ -76,12 +107,19 @@ export class TaskController {
       status?: TaskStatus;
       expected_date?: string;
     },
+    @Headers('authorization') authorization: string,
   ) {
-    const userID = 'e4b8c165-81cc-4df4-aa22-20fe94ab57e9';
+    if (!authorization) {
+      throw new UnauthorizedException('You must be logged ');
+    }
+    const token = authorization.split(' ')[1];
+    const decoded = this.jwtService.verify(token, {
+      secret: 'todoapp',
+    });
     const expectedDate = taskDTO.expected_date
       ? new Date(taskDTO.expected_date)
       : undefined; // Parsear la fecha si está presente
-    const updatedTask = await this.taskService.update(id, userID, {
+    const updatedTask = await this.taskService.update(id, decoded.id, {
       ...taskDTO,
       expectedDate,
     });
@@ -93,10 +131,19 @@ export class TaskController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string): Promise<{ message: string }> {
-    const userID = 'e4b8c165-81cc-4df4-aa22-20fe94ab57e9';
+  async remove(
+    @Param('id') id: string,
+    @Headers('authorization') authorization: string,
+  ): Promise<{ message: string }> {
+    if (!authorization) {
+      throw new UnauthorizedException('You must be logged ');
+    }
+    const token = authorization.split(' ')[1];
+    const decoded = this.jwtService.verify(token, {
+      secret: 'todoapp',
+    });
 
-    await this.taskService.delete(id, userID);
+    await this.taskService.delete(id, decoded.id);
 
     return { message: 'Task deleted successfully' };
   }
